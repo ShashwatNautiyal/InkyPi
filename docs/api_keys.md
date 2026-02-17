@@ -94,3 +94,15 @@ Required for the Image Album plugin for the Immich Provider
     ```
     IMMICH_KEY=your-key
     ```
+
+## deAPI (Optional)
+
+Required for the Image Album plugin when "Convert to Illustration" is enabled
+
+- Sign up at [deAPI](https://deapi.ai) and claim $5 free credits (no credit card required)
+- Get your API token and Client ID from the [deAPI dashboard](https://deapi.ai/dashboard)
+- Store in .env:
+    ```
+    DEAPI_TOKEN=your_deapi_api_key
+    DEAPI_CLIENT_ID=your_client_id   # Optional: enables WebSocket for faster results
+    ```
