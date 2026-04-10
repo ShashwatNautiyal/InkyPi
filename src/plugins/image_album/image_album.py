@@ -114,9 +114,47 @@ class ImmichProvider:
         logger.debug(f"Found {len(all_items)} total assets in album")
         return all_items
 
-    def get_image_by_album(self, album: str, dimensions: tuple[int, int], resize: bool = True) -> tuple[Image.Image | None, dict | None]:
+    def _filter_assets_by_orientation(
+        self,
+        assets: list[dict],
+        orientation: str | None,
+        context: str,
+    ) -> list[dict]:
         """
-        Get a random image from the album.
+        Filter assets to only those matching the requested orientation.
+        Falls back to the full list if no matches are found.
+        Assets with missing or zero dimensions are excluded from filtered results.
+        """
+        if orientation not in ("vertical", "horizontal"):
+            return assets
+
+        want_portrait = orientation == "vertical"
+
+        filtered = []
+        for a in assets:
+            w = a.get("width") or 0
+            h = a.get("height") or 0
+            if w == 0 or h == 0:
+                continue  # skip assets with unknown dimensions
+            is_portrait = h > w
+            if is_portrait == want_portrait:
+                filtered.append(a)
+
+        if filtered:
+            logger.info(
+                f"Filtered to {len(filtered)} {orientation} assets "
+                f"(from {len(assets)} total) for {context}"
+            )
+            return filtered
+
+        logger.warning(
+            f"No {orientation} assets found for {context}, using all assets"
+        )
+        return assets
+
+    def get_image_by_album(self, album: str, dimensions: tuple[int, int], resize: bool = True, orientation: str | None = None) -> tuple[Image.Image | None, dict | None]:
+        """
+        Get a random image from the album, filtered by orientation if specified.
 
         Returns:
             (PIL Image or None, selected_asset dict or None)
@@ -134,6 +172,8 @@ class ImmichProvider:
         except Exception as e:
             logger.error(f"Error retrieving album data from {self.base_url}: {e}")
             return None, None
+
+        assets = self._filter_assets_by_orientation(assets, orientation, f"album '{album}'")
 
         selected_asset = choice(assets)
         asset_id = selected_asset["id"]
@@ -157,9 +197,9 @@ class ImmichProvider:
         logger.info(f"Successfully loaded image: {img.size[0]}x{img.size[1]}")
         return img, selected_asset
 
-    def get_image_by_person(self, person_name: str, dimensions: tuple[int, int], resize: bool = True) -> tuple[Image.Image | None, dict | None]:
+    def get_image_by_person(self, person_name: str, dimensions: tuple[int, int], resize: bool = True, orientation: str | None = None) -> tuple[Image.Image | None, dict | None]:
         """
-        Get a random image from the person.
+        Get a random image from the person, filtered by orientation if specified.
 
         Returns:
             (PIL Image or None, selected_asset dict or None)
@@ -172,6 +212,8 @@ class ImmichProvider:
         except Exception as e:
             logger.error(f"Error retrieving person data from {self.base_url}: {e}")
             return None, None
+
+        assets = self._filter_assets_by_orientation(assets, orientation, f"person '{person_name}'")
 
         selected_asset = choice(assets)
         asset_id = selected_asset["id"]
@@ -247,9 +289,9 @@ class ImageAlbum(BasePlugin):
                 load_resize = False if convert_to_illustration else not use_padding
 
                 if person_name:
-                    img, selected_asset = provider.get_image_by_person(person_name, dimensions, resize=load_resize)
+                    img, selected_asset = provider.get_image_by_person(person_name, dimensions, resize=load_resize, orientation=orientation)
                 else:
-                    img, selected_asset = provider.get_image_by_album(album, dimensions, resize=load_resize)
+                    img, selected_asset = provider.get_image_by_album(album, dimensions, resize=load_resize, orientation=orientation)
 
                 # Optional: convert to illustration via AI (modular provider)
                 if img and convert_to_illustration:

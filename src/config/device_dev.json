@@ -1,46 +1,82 @@
 {
-  "name": "InkyPi Development",
-  "display_type": "mock",
-  "resolution": [800, 480],
-  "orientation": "horizontal",
-  "plugin_order": [
-    "calendar",
-    "ai_image",
-    "ai_text",
-    "clock",
-    "comic",
-    "countdown",
-    "github",
-    "image_album",
-    "image_folder",
-    "image_upload",
-    "apod",
-    "image_url",
-    "newspaper",
-    "rss",
-    "screenshot",
-    "todo_list",
-    "unsplash",
-    "weather",
-    "wpotd",
-    "year_progress"
-  ],
-  "playlist_config": {
-    "playlists": [
-      {
-        "name": "Default",
-        "start_time": "00:00",
-        "end_time": "24:00",
-        "plugins": [],
-        "current_plugin_index": null
-      }
+    "name": "InkyPi Development",
+    "display_type": "mock",
+    "resolution": [
+        800,
+        480
     ],
-    "active_playlist": null
-  },
-  "refresh_info": {
-    "refresh_time": null,
-    "image_hash": null,
-    "refresh_type": null,
-    "plugin_id": null
-  }
+    "orientation": "vertical",
+    "plugin_order": [
+        "calendar",
+        "ai_image",
+        "ai_text",
+        "clock",
+        "comic",
+        "countdown",
+        "github",
+        "image_album",
+        "image_folder",
+        "image_upload",
+        "apod",
+        "image_url",
+        "newspaper",
+        "rss",
+        "screenshot",
+        "todo_list",
+        "unsplash",
+        "weather",
+        "wpotd",
+        "year_progress"
+    ],
+    "playlist_config": {
+        "playlists": [
+            {
+                "name": "Default",
+                "start_time": "00:00",
+                "end_time": "24:00",
+                "plugins": [
+                    {
+                        "plugin_id": "image_album",
+                        "name": "Immich Daapu",
+                        "plugin_settings": {
+                            "albumProvider": "Immich",
+                            "url": "https://photos.shashwatnautiyal.com",
+                            "album": "",
+                            "personName": "Daapu",
+                            "padImage": "false",
+                            "randomize": "true",
+                            "convertToIllustration": "true",
+                            "backgroundOption": "blur",
+                            "backgroundColor": "#ffffff"
+                        },
+                        "refresh": {
+                            "interval": 120
+                        },
+                        "latest_refresh_time": "2026-04-10T12:43:16.561499+05:30"
+                    }
+                ],
+                "current_plugin_index": null
+            }
+        ],
+        "active_playlist": "Default"
+    },
+    "refresh_info": {
+        "refresh_time": "2026-04-10T12:43:16.561499+05:30",
+        "image_hash": "90fe6bf9d84e129626aaa38d34379e8f73f92348794fc9511ebeabc5398316ad",
+        "refresh_type": "Playlist",
+        "plugin_id": "image_album",
+        "playlist": "Default",
+        "plugin_instance": "Immich Daapu"
+    },
+    "inverted_image": null,
+    "log_system_stats": null,
+    "timezone": "Asia/Kolkata",
+    "time_format": "12h",
+    "plugin_cycle_interval_seconds": 3600,
+    "image_settings": {
+        "saturation": 1.0,
+        "brightness": 1.0,
+        "sharpness": 1.0,
+        "contrast": 1.0
+    }
 }
